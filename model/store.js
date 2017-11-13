@@ -56,6 +56,7 @@ const Store = module.exports = mongoose.model('store', storeSchema)
 // Data is going to contain {username, email, and password}
 Store.create = function(data) {
   // Hash password
+  data = {...data}
   let {password} = data
   delete data.password
   return bcrypt.hash(password, 8)
