@@ -11,6 +11,7 @@
     "start": "node index.js",
     "watch": "nodemon index.js",
     "test-watch": "jest --watch -i --coverage",
+    "test-watch-lite": "jest --watch -i",
     "test": "jest -i --coverage",
     "dbonWin": "mkdir -p $HOME/db && mongod --dbpath $HOME/db",
     "dbon": "mkdir -p ./db && mongod --dbpath ./db",
