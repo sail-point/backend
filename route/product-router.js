@@ -69,7 +69,7 @@ module.exports = new Router()
   })
 
 
-  .delete('/products/:id', (req, res, next) => {
+  .delete('/products/:id', bearerAuth, (req, res, next) => {
     Product.findByIdAndRemove(req.params.id)
       .then(() => {
         res.sendStatus(204)

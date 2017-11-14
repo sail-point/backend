@@ -250,28 +250,69 @@ describe('/products', () => {
     })
   })
 
-  describe('DELETE /products/:id', () => {
+  describe.only('DELETE /products/:id', () => {
 
-    test.only('204 No Content, Product deleted Product updated', () => {
+    test('204 Product deleted', () => {
       let tempMock
       return storeMock.create()
         .then(mock => {
           tempMock = mock
-       
           return productMock.create({ store: mock })
         })
         .then(product => {
-     
           return superagent.delete(`${apiURL}/products/${product._id}`)
             .set('Authorization', `Bearer ${tempMock.token}`)
         })
         .then(res => {
-          console.log('-->> HERE')
           expect(res.status).toEqual(204)
         })
     })
 
+    test('400 no bearer authorization sent', () => {
+      return storeMock.create()
+        .then(mock => {
+          return productMock.create({ store: mock })
+        })
+        .then(product => {
+          return superagent.delete(`${apiURL}/products/${product._id}`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(400)
+        })
+    })
 
+    test('401 bad token', () => {
+      return storeMock.create()
+        .then(mock => {
+          return productMock.create({ store: mock })
+        })
+        .then(product => {
+          return superagent.delete(`${apiURL}/products/${product._id}`)
+            .set('Authorization', `Bearer bad token`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(401)
+        })
+    })
+
+    test('404 Product not found', () => {
+      let tempMock
+      return storeMock.create()
+        .then(mock => {
+          tempMock = mock
+          return productMock.create({ store: mock })
+        })
+        .then(() => {
+          return superagent.delete(`${apiURL}/products/notAThing`)
+            .set('Authorization', `Bearer ${tempMock.token}`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(404)
+        })
+    })
   })
 })
 
