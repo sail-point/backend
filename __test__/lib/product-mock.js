@@ -3,7 +3,7 @@
 const faker = require('faker')
 const Product = require('../../model/product.js')
 
-let create = (store) => {
+let create = ({ store }) => {
   return new Product({
     name: faker.lorem.words(3),
     category: faker.lorem.words(5),
@@ -17,8 +17,9 @@ let create = (store) => {
   }).save()
 }
 
-let createMany = ({store, num}) => {
-  return Promise.all(new Array(num).fill(0).map(() => create(store)))
+let createMany = ({ store, num: num = 10  }) => {
+
+  return Promise.all(new Array(num).fill(0).map(() => create({ store })))
 }
 
 let remove = () => {
