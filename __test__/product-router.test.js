@@ -49,14 +49,13 @@ describe('/products', () => {
 
     })
 
-    test('400 Product did not receive the correct values', () => {
+    test('400 Product didn\'t receive any values', () => {
       let tempStore
       return storeMock.create()
         .then(mock => {
           tempStore = mock
           return superagent.post(`${apiURL}/products`)
             .set('Authorization', `Bearer ${tempStore.token}`)
-
         })
         .then(Promise.reject)
         .catch(res => {
@@ -213,7 +212,6 @@ describe('/products', () => {
     })
 
     test('401 Bad token set', () => {
-
       return storeMock.create()
         .then(mock => {
           return productMock.create({ store: mock })
@@ -251,7 +249,6 @@ describe('/products', () => {
   })
 
   describe('DELETE /products/:id', () => {
-
     test('204 Product deleted', () => {
       let tempMock
       return storeMock.create()

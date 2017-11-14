@@ -61,8 +61,6 @@ module.exports = new Router()
       return next(httpErrors(400, 'product name is required'))
     Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
       .then(product => {
-        if (!product)
-          throw httpErrors(404, '__REQUEST_ERROR__ product not found')
         res.json(product)
       })
       .catch(next)
