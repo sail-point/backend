@@ -13,7 +13,7 @@ const employeeSchema = mongoose.Schema({
   pin: {type: String, default: Math.random().toString().slice(-4)},
   hired: {type: Date },
   terminated: {type: Date, default: null},
-  store: { type: mongoose.Schema.Types.ObjectId, required: true, unique: true },
+  store: { type: mongoose.Schema.Types.ObjectId, required: true},
 })
 
 module.exports = mongoose.model('employee', employeeSchema)

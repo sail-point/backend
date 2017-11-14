@@ -31,7 +31,7 @@ describe('/employees', () => {
               phoneNumber: '206-345-5353',
               hoursPerWeek: 30,
               salaryPerHour: 20,
-              pin:'35354',
+              pin:'3535',
               hired: '2017-11-13T23:16:34.000Z',
               terminated: null,
             })
@@ -44,7 +44,7 @@ describe('/employees', () => {
           expect(response.body.phoneNumber).toEqual('206-345-5353')
           expect(response.body.hoursPerWeek).toEqual(30)
           expect(response.body.salaryPerHour).toEqual(20)
-          expect(response.body.pin).toEqual('35354')
+          expect(response.body.pin).toEqual('3535')
           expect(response.body.hired).toEqual('2017-11-13T23:16:34.000Z')
           expect(response.body.terminated).toEqual(null)
           expect(response.body.store).toEqual(tempStore.store._id.toString())
@@ -127,6 +127,31 @@ describe('/employees', () => {
           expect(res.body.firstName).toEqual(tempMock.employee.firstName)
           expect(res.body.lastName).toEqual(tempMock.employee.lastName)
           expect(res.body.pin).toEqual(tempMock.employee.pin)
+        })
+    })
+
+    test('GET /employees/pin/:pin pin has too many characters', () => {
+      return employeeMock.createTooBig()
+        .then(mock => {
+          return superagent.get(`${apiURL}/employees/pin/${mock.employee.pin}`)
+            .set('Authorization', `Bearer ${mock.tempStore.token}`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(400)
+        })
+    })
+
+    test('GET /employees/pin/:pin pin has too few characters', () => {
+      return employeeMock.createTooSmall()
+        .then(mock => {
+          console.log('mock.employee.pin: ', mock.employee.pin)
+          return superagent.get(`${apiURL}/employees/pin/${mock.employee.pin}`)
+            .set('Authorization', `Bearer ${mock.tempStore.token}`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(400)
         })
     })
 
