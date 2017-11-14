@@ -8,7 +8,7 @@ const server = require('../lib/server.js')
 const storeMock = require('./lib/store-mock.js')
 const productMock = require('./lib/product-mock.js')
 
-const apiURL = `http://localhost:${process.env.PORT}`
+const apiURL = `${process.env.API_URL}`
 
 describe('/products', () => {
   beforeAll(server.start)
@@ -16,7 +16,7 @@ describe('/products', () => {
   afterEach(storeMock.remove)
   afterEach(productMock.remove)
 
-  describe('POST /product', () => {
+  describe('POST /products', () => {
     test('200 OK, should create a product', () => {
       let tempStore
       return storeMock.create()
@@ -33,11 +33,10 @@ describe('/products', () => {
               vegetarian: true,
               glutenFree: true,
               available: true,
-              store: tempStore.store._id,
+
             })
         })
         .then(res => {
-          console.log(res.body)
           expect(res.status).toEqual(200)
           expect(res.body.name).toEqual('carrots')
           expect(res.body.category).toEqual('health')
@@ -68,14 +67,10 @@ describe('/products', () => {
     })
 
     test('401 OK, should create a product', () => {
-      let tempStore
       return storeMock.create()
-        .then(mock => {
-          tempStore = mock
+        .then(() => {
           return superagent.post(`${apiURL}/products`)
-            .set('Authorization', `Bearer ${tempStore.token}`)
-            // .send({
-            // })
+            .set('Authorization', `Bearer bad token`)
         })
         .then(Promise.reject)
         .catch(res => {
@@ -83,6 +78,26 @@ describe('/products', () => {
           expect(res.status).toEqual(401)
         })
 
+    })
+  })
+
+  describe('GET /products', () => {
+    test('200 OK, should return a product', () => {
+      let tempMock
+      return storeMock.create()
+        .then(mock => {
+          tempMock = mock
+          return productMock.createMany({ store: mock, num: 30 })
+        })
+        .then(product => {
+          console.log('--> PRODUCT:', product)
+          return superagent.get(`${apiURL}/products`)
+            .set('Authorization', `Bearer ${tempMock.token}`)
+        })
+        .then(res => {
+          expect(res.status).toEqual(200)
+          expect(res.body.length).toEqual(30)
+        })
     })
   })
 })
