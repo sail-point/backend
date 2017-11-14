@@ -17,7 +17,7 @@ describe('/products', () => {
   afterEach(productMock.remove)
 
   describe('POST /products', () => {
-    test('200 OK, should create a product', () => {
+    test('200 OK should create a product', () => {
       let tempStore
       return storeMock.create()
         .then(mock => {
@@ -65,7 +65,7 @@ describe('/products', () => {
 
     })
 
-    test('401 OK, should create a product', () => {
+    test('401 Bad token', () => {
       return storeMock.create()
         .then(() => {
           return superagent.post(`${apiURL}/products`)
@@ -81,7 +81,7 @@ describe('/products', () => {
   })
 
   describe('GET /products', () => {
-    test('200 OK, should return a bunch of products', () => {
+    test('200 OK should return a bunch of products', () => {
       let tempMock
       return storeMock.create()
         .then(mock => {
@@ -98,7 +98,7 @@ describe('/products', () => {
         })
     })
 
-    test('200 OK, should return some name fuzzies', () => {
+    test('200 OK should return some name fuzzies', () => {
       let tempMock
       return storeMock.create()
         .then(mock => {
@@ -116,7 +116,7 @@ describe('/products', () => {
         })
     })
 
-    test('200 OK, should return some category fuzzies', () => {
+    test('200 OK should return some category fuzzies', () => {
       let tempMock
       return storeMock.create()
         .then(mock => {
@@ -131,6 +131,54 @@ describe('/products', () => {
         .then(res => {
           expect(res.status).toEqual(200)
           expect(res.body.count).toBeLessThan(30)
+        })
+    })
+
+    test('200 OK page should return NaN', () => {
+      let tempMock
+      return storeMock.create()
+        .then(mock => {
+          tempMock = mock
+          return productMock.create({ store: mock, num: 30 })
+        })
+        .then(() => {
+          return superagent.get(`${apiURL}/products?page=hello`)
+            .set('Authorization', `Bearer ${tempMock.token}`)
+        })
+        .then(res => {
+          expect(res.status).toEqual(200)
+        })
+    })
+
+    test('200 OK page should be less than 0', () => {
+      let tempMock
+      return storeMock.create()
+        .then(mock => {
+          tempMock = mock
+          return productMock.create({ store: mock, num: 30 })
+        })
+        .then(() => {
+          return superagent.get(`${apiURL}/products?page=-1`)
+            .set('Authorization', `Bearer ${tempMock.token}`)
+        })
+        .then(res => {
+          expect(res.status).toEqual(200)
+        })
+    })
+
+    test('200 OK page should be 1', () => {
+      let tempMock
+      return storeMock.create()
+        .then(mock => {
+          tempMock = mock
+          return productMock.create({ store: mock, num: 30 })
+        })
+        .then(() => {
+          return superagent.get(`${apiURL}/products?page=1`)
+            .set('Authorization', `Bearer ${tempMock.token}`)
+        })
+        .then(res => {
+          expect(res.status).toEqual(200)
         })
     })
 
@@ -167,53 +215,7 @@ describe('/products', () => {
         })
     })
 
-    test('200 OK, should return NaN', () => {
-      let tempMock
-      return storeMock.create()
-        .then(mock => {
-          tempMock = mock
-          return productMock.create({ store: mock, num: 30 })
-        })
-        .then(() => {
-          return superagent.get(`${apiURL}/products?page=hello`)
-            .set('Authorization', `Bearer ${tempMock.token}`)
-        })
-        .then(res => {
-          expect(res.status).toEqual(200)
-        })
-    })
 
-    test('200 OK, should be less than 0', () => {
-      let tempMock
-      return storeMock.create()
-        .then(mock => {
-          tempMock = mock
-          return productMock.create({ store: mock, num: 30 })
-        })
-        .then(() => {
-          return superagent.get(`${apiURL}/products?page=-1`)
-            .set('Authorization', `Bearer ${tempMock.token}`)
-        })
-        .then(res => {
-          expect(res.status).toEqual(200)
-        })
-    })
-
-    test('200 OK, should be 1', () => {
-      let tempMock
-      return storeMock.create()
-        .then(mock => {
-          tempMock = mock
-          return productMock.create({ store: mock, num: 30 })
-        })
-        .then(() => {
-          return superagent.get(`${apiURL}/products?page=1`)
-            .set('Authorization', `Bearer ${tempMock.token}`)
-        })
-        .then(res => {
-          expect(res.status).toEqual(200)
-        })
-    })
   })
 
   describe('PUT /products/:id', () => {
