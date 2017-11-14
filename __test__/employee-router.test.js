@@ -130,6 +130,31 @@ describe('/employees', () => {
         })
     })
 
+    test('GET /employees/pin/:pin pin has too many characters', () => {
+      return employeeMock.createTooBig()
+        .then(mock => {
+          return superagent.get(`${apiURL}/employees/pin/${mock.employee.pin}`)
+            .set('Authorization', `Bearer ${mock.tempStore.token}`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(400)
+        })
+    })
+
+    test('GET /employees/pin/:pin pin has too few characters', () => {
+      return employeeMock.createTooSmall()
+        .then(mock => {
+          console.log('mock.employee.pin: ', mock.employee.pin)
+          return superagent.get(`${apiURL}/employees/pin/${mock.employee.pin}`)
+            .set('Authorization', `Bearer ${mock.tempStore.token}`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(400)
+        })
+    })
+
     test('GET /employees/pin/:pin 404 employee not found', () => {
       return employeeMock.create()
         .then(mock => {
