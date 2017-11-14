@@ -28,10 +28,7 @@ describe('/products', () => {
               name: 'carrots',
               category: 'health',
               price: 6,
-              image: faker.image.food,
-              vegan: true,
-              vegetarian: true,
-              glutenFree: true,
+              image: faker.image.food(),
               available: true,
 
             })
@@ -41,9 +38,6 @@ describe('/products', () => {
           expect(res.body.name).toEqual('carrots')
           expect(res.body.category).toEqual('health')
           expect(res.body.price).toEqual(6)
-          expect(res.body.vegan).toEqual(true)
-          expect(res.body.vegetarian).toEqual(true)
-          expect(res.body.glutenFree).toEqual(true)
           expect(res.body.available).toEqual(true)
         })
 
