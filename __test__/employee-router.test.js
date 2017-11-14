@@ -114,7 +114,7 @@ describe('/employees', () => {
   })
 
   describe('GET /employees', () => {
-    test.only('GET /employees/pin/:pin 200 should return employee whose pin is entered', () => {
+    test('GET /employees/pin/:pin 200 should return employee whose pin is entered', () => {
       let tempMock
       return employeeMock.create()
         .then(mock => {
