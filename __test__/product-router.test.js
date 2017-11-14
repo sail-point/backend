@@ -152,7 +152,123 @@ describe('/products', () => {
 
   })
 
-  describe('PUT /products', () => { })
-  
-  describe('DELETE /products', () => { })
+  describe('PUT /products/:id', () => {
+    test('200 No content, delete product', () => {
+      let tempMock
+      return storeMock.create()
+        .then(mock => {
+          tempMock = mock
+          return productMock.create({ store: mock })
+        })
+        .then(product => {
+          return superagent.put(`${apiURL}/products/${product._id}`)
+            .set('Authorization', `Bearer ${tempMock.token}`)
+            .send({
+              name: 'banana',
+              category: 'potassium',
+            })
+        })
+        .then(res => {
+          expect(res.status).toEqual(200)
+          expect(res.body.name).toEqual('banana')
+          expect(res.body.category).toEqual('potassium')
+        })
+    })
+
+    test('400 Bad Input, need to send a product name', () => {
+      let tempMock
+      return storeMock.create()
+        .then(mock => {
+          tempMock = mock
+          return productMock.create({ store: mock })
+        })
+        .then(product => {
+          return superagent.put(`${apiURL}/products/${product._id}`)
+            .set('Authorization', `Bearer ${tempMock.token}`)
+            .send({
+              category: 'potassium',
+            })
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(400)
+        })
+    })
+
+    test('400 Bad Input, need to send a name', () => {
+      return storeMock.create()
+        .then(mock => {
+          return productMock.create({ store: mock })
+        })
+        .then(product => {
+          return superagent.put(`${apiURL}/products/${product._id}`)
+            .send({
+              name: 'pineapple',
+            })
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(400)
+        })
+    })
+
+    test('401 Bad token set', () => {
+      
+      return storeMock.create()
+        .then(mock => {
+          return productMock.create({ store: mock })
+        })
+        .then(product => {
+          return superagent.put(`${apiURL}/products/${product._id}`)
+            .set('Authorization', `Bearer bad token`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(401)
+        })
+    })
+
+    test('404 product not found', () => {
+      let tempMock
+      return storeMock.create()
+        .then(mock => {
+          tempMock = mock
+          return productMock.create({ store: mock })
+        })
+        .then(() => {
+          return superagent.put(`${apiURL}/products/thisIsNotAThing`)
+            .set('Authorization', `Bearer ${tempMock.token}`)
+            .send({
+              name: 'banana',
+              category: 'potassium',
+            })
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(404)
+        })
+    })
+  })
+
+  describe('DELETE /products/:id', () => {
+
+    test('204 No content, delete product', () => {
+      let tempMock
+      return storeMock.create()
+        .then(mock => {
+          tempMock = mock
+          return productMock.createMany({ store: mock, num: 30 })
+        })
+        .then(() => {
+          return superagent.get(`${apiURL}/products`)
+            .set('Authorization', `Bearer ${tempMock.token}`)
+        })
+        .then(res => {
+          expect(res.status).toEqual(200)
+          expect(res.body.count).toEqual(30)
+        })
+    })
+
+  })
 })
+

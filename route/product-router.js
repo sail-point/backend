@@ -29,7 +29,7 @@ module.exports = new Router()
     // Fuzzy Search
     if (req.query.name) req.query.name = ({ $regex: fuzzy(req.query.name), $options: 'i' })
     if (req.query.category) req.query.category = ({ $regex: fuzzy(req.query.category), $options: 'i' })
- 
+
     let productsCache
     Product.find(req.query)
       .skip(page * 100)
@@ -56,16 +56,19 @@ module.exports = new Router()
   })
 
 
-
-
-
-
-
-
-
   .put('/products/:id', bearerAuth, (req, res, next) => {
-
+    if (!req.body.name)
+      return next(httpErrors(400, 'product name is required'))
+    Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+      .then(product => {
+        if (!product)
+          throw httpErrors(404, '__REQUEST_ERROR__ product not found')
+        res.json(product)
+      })
+      .catch(next)
   })
+
+
   .delete('/products:/id', bearerAuth, (req, res, next) => {
 
   })
