@@ -33,8 +33,8 @@ module.exports = new Router()
 
     let employeesCache
     Employee.find(req.query)
-      .skip(page * 100)
-      .limit(100)
+      .skip(page * 10)
+      .limit(10)
       .then(employees => {
         employeesCache = employees
         return Employee.find(req.query).count()
@@ -45,7 +45,7 @@ module.exports = new Router()
           data: employeesCache,
         }
 
-        let lastPage = Math.floor(count / 100)
+        let lastPage = Math.floor(count / 10)
         res.links({
           next: `http://localhost/employees?page=${page + 1}`,
           prev: `http://localhost/employees?page=${page < 1 ? 0 : page - 1}`,

@@ -28,9 +28,9 @@ describe('/employees', () => {
               lastName: 'Tsukino',
               title: 'Server',
               email: 'usagi@crystal.net',
-              phoneNum: '206-345-5353',
-              hrsPerWk: 30,
-              salaryPerHr: 20,
+              phoneNumber: '206-345-5353',
+              hoursPerWeek: 30,
+              salaryPerHour: 20,
               pin:'35354',
               hired: '2017-11-13T23:16:34.000Z',
               terminated: null,
@@ -41,9 +41,9 @@ describe('/employees', () => {
           expect(response.body.lastName).toEqual('Tsukino')
           expect(response.body.title).toEqual('Server')
           expect(response.body.email).toEqual('usagi@crystal.net')
-          expect(response.body.phoneNum).toEqual('206-345-5353')
-          expect(response.body.hrsPerWk).toEqual(30)
-          expect(response.body.salaryPerHr).toEqual(20)
+          expect(response.body.phoneNumber).toEqual('206-345-5353')
+          expect(response.body.hoursPerWeek).toEqual(30)
+          expect(response.body.salaryPerHour).toEqual(20)
           expect(response.body.pin).toEqual('35354')
           expect(response.body.hired).toEqual('2017-11-13T23:16:34.000Z')
           expect(response.body.terminated).toEqual(null)
@@ -63,10 +63,10 @@ describe('/employees', () => {
               firstName: 'Usagi',
               title: 'Server',
               email: 'usagi@crystal.net',
-              phoneNum: '206-345-5353',
-              hrsPerWk: 30,
-              salaryPerHr: 20,
-              pin:'35354',
+              phoneNumber: '206-345-5353',
+              hoursPerWeek: 30,
+              salaryPerHour: 20,
+              pin:'3535',
               hired: '2017-11-13T23:16:34.000Z',
               terminated: null,
             })
@@ -99,9 +99,9 @@ describe('/employees', () => {
           lastName: 'Kaioh',
           title: 'Manager',
           email: 'michiru@crystal.net',
-          phoneNum: '206-346-5353',
-          hrsPerWk: 40,
-          salaryPerHr: 20,
+          phoneNumber: '206-346-5353',
+          hoursPerWeek: 40,
+          salaryPerHour: 20,
           pin:'35355',
           hired: '2017-10-13T23:16:34.000Z',
           terminated: null,
@@ -114,32 +114,32 @@ describe('/employees', () => {
   })
 
   describe('GET /employees', () => {
-    test('GET /employees 200 should return 100 employees', () => {
+    test('GET /employees 200 should return 10 employees', () => {
       let tempStore
       let mockPassword = faker.internet.password()
       return storeMock.create(mockPassword)
         .then(mock => {
           tempStore = mock
-          return employeeMock.createMany(100)
+          return employeeMock.createMany(10)
             .then(() => {
               return superagent.get(`${apiURL}/employees`)
                 .set('Authorization', `Bearer ${tempStore.token}`)
             })
             .then(res => {
               expect(res.status).toEqual(200)
-              expect(res.body.count).toEqual(100)
-              expect(res.body.data.length).toEqual(100)
+              expect(res.body.count).toEqual(10)
+              expect(res.body.data.length).toEqual(10)
             })
         })
     })
 
-    test('GET /employees? 200 should return 100 employees', () => {
+    test('GET /employees? 200 should return 10 employees', () => {
       let tempStore
       let mockPassword = faker.internet.password()
       return storeMock.create(mockPassword)
         .then(mock => {
           tempStore = mock
-          return employeeMock.createMany(100)
+          return employeeMock.createMany(10)
             .then(() => {
               return superagent.get(`${apiURL}/employees?title=Server`)
                 .set('Authorization', `Bearer ${tempStore.token}`)
@@ -150,13 +150,13 @@ describe('/employees', () => {
         })
     })
 
-    test('GET /employees? 200 should return 100 employees (fuzzy)', () => {
+    test('GET /employees? 200 should return 10 employees (fuzzy)', () => {
       let tempStore
       let mockPassword = faker.internet.password()
       return storeMock.create(mockPassword)
         .then(mock => {
           tempStore = mock
-          return employeeMock.createMany(100)
+          return employeeMock.createMany(10)
             .then(() => {
               return superagent.get(`${apiURL}/employees?title=ser`)
                 .set('Authorization', `Bearer ${tempStore.token}`)
@@ -245,7 +245,7 @@ describe('/employees', () => {
   })
 
   describe('DELETE /employees/:id', () => {
-    test.only('should respond with a 204', () => {
+    test('should respond with a 204', () => {
       let tempEmployee
       return employeeMock.create()
         .then(mock => {
