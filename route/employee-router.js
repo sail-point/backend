@@ -55,6 +55,15 @@ module.exports = new Router()
       })
       .catch(next)
   })
+  .get('/employees/pin/:pin', bearerAuth, (req, res, next) => {
+    Employee.findOne({pin: req.params.pin})
+      .then(employee => {
+        if(!employee)
+          throw httpErrors(404, 'The employee does not exist')
+        res.json(employee)
+      })
+      .catch(next)
+  })
   .put('/employees/:id', bearerAuth, (req, res, next) => {
     Employee.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
       .then(employee => {
