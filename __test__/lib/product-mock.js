@@ -9,9 +9,6 @@ let create = ({ store }) => {
     category: faker.lorem.words(5),
     price: Math.ceil(Math.random() * 100),
     image: faker.image.food,
-    vegan: Math.random() > .5,
-    vegetarian: Math.random() > .5,
-    glutenFree: Math.random() > .5,
     available: Math.random() > .5,
     store: store.store._id,
   }).save()
