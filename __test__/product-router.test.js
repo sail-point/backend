@@ -153,7 +153,7 @@ describe('/products', () => {
   })
 
   describe('PUT /products/:id', () => {
-    test('200 No content, delete product', () => {
+    test('200 OK Product updated', () => {
       let tempMock
       return storeMock.create()
         .then(mock => {
@@ -213,7 +213,7 @@ describe('/products', () => {
     })
 
     test('401 Bad token set', () => {
-      
+
       return storeMock.create()
         .then(mock => {
           return productMock.create({ store: mock })
@@ -252,22 +252,25 @@ describe('/products', () => {
 
   describe('DELETE /products/:id', () => {
 
-    test('204 No content, delete product', () => {
+    test.only('204 No Content, Product deleted Product updated', () => {
       let tempMock
       return storeMock.create()
         .then(mock => {
           tempMock = mock
-          return productMock.createMany({ store: mock, num: 30 })
+       
+          return productMock.create({ store: mock })
         })
-        .then(() => {
-          return superagent.get(`${apiURL}/products`)
+        .then(product => {
+     
+          return superagent.delete(`${apiURL}/products/${product._id}`)
             .set('Authorization', `Bearer ${tempMock.token}`)
         })
         .then(res => {
-          expect(res.status).toEqual(200)
-          expect(res.body.count).toEqual(30)
+          console.log('-->> HERE')
+          expect(res.status).toEqual(204)
         })
     })
+
 
   })
 })
