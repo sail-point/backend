@@ -266,8 +266,8 @@ describe('/employees', () => {
             })
         })
         .then(Promise.reject)
-        .catch(response => {
-          expect(response.status).toEqual(404)
+        .catch(res => {
+          expect(res.status).toEqual(404)
         })
     })
   })
