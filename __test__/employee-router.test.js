@@ -243,4 +243,19 @@ describe('/employees', () => {
         })
     })
   })
+
+  describe('DELETE /employees/:id', () => {
+    test.only('should respond with a 204', () => {
+      let tempEmployee
+      return employeeMock.create()
+        .then(mock => {
+          tempEmployee = mock
+          return superagent.delete(`${apiURL}/employees/${tempEmployee.employee._id}`)
+            .set('Authorization', `Bearer ${tempEmployee.tempStore.token}`)
+        })
+        .then(res => {
+          expect(res.status).toEqual(204)
+        })
+    })
+  })
 })
