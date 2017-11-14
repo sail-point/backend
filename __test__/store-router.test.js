@@ -73,7 +73,9 @@ describe('AUTH router', () => {
           expect(res.status).toEqual(409)
         })
     })
+  })
 
+  describe('/admin/login', () => {
     test('GET /admin/login with 200',() => {
       return storeMock.create()
         .then(mock => {
@@ -83,6 +85,42 @@ describe('AUTH router', () => {
         .then(res => {
           expect(res.status).toEqual(200)
           expect(res.body.token).toBeTruthy()
+        })
+    })
+
+    test('GET /admin/login with 400 (basic auth required)',() => {
+      return storeMock.create()
+        .then(mock => {
+          return superagent.get(`${apiURL}/admin/login`)
+            .set('Authorization', `Bearer ${mock.token}`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(400)
+        })
+    })
+
+    test('GET /admin/login with 401 (wrong password)',() => {
+      return storeMock.create()
+        .then(mock => {
+          return superagent.get(`${apiURL}/admin/login`)
+            .auth(mock.request.storeName, 'lulwat')
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(401)
+        })
+    })
+
+    test('GET /admin/login with 404 (invalid username)',() => {
+      return storeMock.create()
+        .then(mock => {
+          return superagent.get(`${apiURL}/admin/login`)
+            .auth('ThisUserDoesNotExist', mock.request.password)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(404)
         })
     })
   })

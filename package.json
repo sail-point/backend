@@ -4,7 +4,7 @@
   },
   "name": "sail-point-backend",
   "version": "0.0.1",
-  "description": "Sail-Point backedn",
+  "description": "Sail Point is a POS to help restaurants manage orders better",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
