@@ -250,7 +250,7 @@ describe('/products', () => {
     })
   })
 
-  describe.only('DELETE /products/:id', () => {
+  describe('DELETE /products/:id', () => {
 
     test('204 Product deleted', () => {
       let tempMock
