@@ -21,11 +21,10 @@ describe('/products', () => {
       let tempStore
       return storeMock.create()
         .then(mock => {
-          console.log('--> STORE', mock)
           tempStore = mock
           return superagent.post(`${apiURL}/products`)
             .set('Authorization', `Bearer ${tempStore.token}`)
-            .set({
+            .send({
               name: 'carrots',
               category: 'health',
               price: 6,
@@ -34,20 +33,55 @@ describe('/products', () => {
               vegetarian: true,
               glutenFree: true,
               available: true,
+              store: tempStore.store._id,
             })
         })
         .then(res => {
+          console.log(res.body)
           expect(res.status).toEqual(200)
           expect(res.body.name).toEqual('carrots')
           expect(res.body.category).toEqual('health')
           expect(res.body.price).toEqual(6)
-          expect(res.body.image).toBeTruthy()
           expect(res.body.vegan).toEqual(true)
           expect(res.body.vegetarian).toEqual(true)
           expect(res.body.glutenFree).toEqual(true)
           expect(res.body.available).toEqual(true)
         })
 
+    })
+
+    test('400 Product did not receive the correct values', () => {
+      let tempStore
+      return storeMock.create()
+        .then(mock => {
+          tempStore = mock
+          return superagent.post(`${apiURL}/products`)
+            .set('Authorization', `Bearer ${tempStore.token}`)
+
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          console.log(res.body)
+          expect(res.status).toEqual(400)
+        })
+
+    })
+
+    test('401 OK, should create a product', () => {
+      let tempStore
+      return storeMock.create()
+        .then(mock => {
+          tempStore = mock
+          return superagent.post(`${apiURL}/products`)
+            .set('Authorization', `Bearer ${tempStore.token}`)
+            // .send({
+            // })
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          console.log(res.body)
+          expect(res.status).toEqual(401)
+        })
 
     })
   })

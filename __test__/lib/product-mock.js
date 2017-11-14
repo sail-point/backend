@@ -20,7 +20,9 @@ let create = () => {
         available: Math.random() > .5,
         store: tempStore.store._id,
       }).save()
-    }).then(product => product)
+    }).then(product => {
+      res.json(product)
+    })
 }
 
 let createMany = (num) => {
