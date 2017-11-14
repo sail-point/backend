@@ -130,6 +130,18 @@ describe('/employees', () => {
         })
     })
 
+    test('GET /employees/pin/:pin 404 employee not found', () => {
+      return employeeMock.create()
+        .then(mock => {
+          return superagent.get(`${apiURL}/employees/pin/badPin`)
+            .set('Authorization', `Bearer ${mock.tempStore.token}`)
+        })
+        .then(Promise.reject)
+        .catch(res => {
+          expect(res.status).toEqual(404)
+        })
+    })
+
     test('GET /employees 200 should return 10 employees', () => {
       let tempStore
       let mockPassword = faker.internet.password()
@@ -254,8 +266,8 @@ describe('/employees', () => {
             })
         })
         .then(Promise.reject)
-        .catch(response => {
-          expect(response.status).toEqual(404)
+        .catch(res => {
+          expect(res.status).toEqual(404)
         })
     })
   })
