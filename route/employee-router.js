@@ -56,10 +56,11 @@ module.exports = new Router()
       .catch(next)
   })
   .get('/employees/pin/:pin', bearerAuth, (req, res, next) => {
+    console.log('req.params.pin: ', req.params.pin)
     Employee.findOne({pin: req.params.pin})
       .then(employee => {
         if(!employee)
-          throw httpErrors(404, 'The employee does not exist')
+          throw httpErrors(404, 'employee does not exist')
         res.json(employee)
       })
       .catch(next)

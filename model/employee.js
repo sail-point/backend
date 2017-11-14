@@ -2,10 +2,6 @@
 
 const mongoose = require('mongoose')
 
-const findByPin = () => {
-  Math.random().toString().slice(-4)
-}
-
 const employeeSchema = mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
@@ -14,7 +10,7 @@ const employeeSchema = mongoose.Schema({
   phoneNumber: { type: String, required: true },
   hoursPerWeek: { type: Number, required: true },
   salaryPerHour: { type: Number, required: true },
-  pin: {type: String, default: findByPin()},
+  pin: {type: String, default: Math.random().toString().slice(-4)},
   hired: {type: Date },
   terminated: {type: Date, default: null},
   store: { type: mongoose.Schema.Types.ObjectId, required: true, unique: true },

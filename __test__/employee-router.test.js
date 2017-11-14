@@ -102,7 +102,7 @@ describe('/employees', () => {
           phoneNumber: '206-346-5353',
           hoursPerWeek: 40,
           salaryPerHour: 20,
-          pin:'35355',
+          pin:'3535',
           hired: '2017-10-13T23:16:34.000Z',
           terminated: null,
         })
@@ -114,6 +114,22 @@ describe('/employees', () => {
   })
 
   describe('GET /employees', () => {
+    test.only('GET /employees/pin/:pin 200 should return employee whose pin is entered', () => {
+      let tempMock
+      return employeeMock.create()
+        .then(mock => {
+          tempMock = mock
+          return superagent.get(`${apiURL}/employees/pin/${mock.employee.pin}`)
+            .set('Authorization', `Bearer ${mock.tempStore.token}`)
+        })
+        .then(res => {
+          expect(res.status).toEqual(200)
+          expect(res.body.firstName).toEqual(tempMock.employee.firstName)
+          expect(res.body.lastName).toEqual(tempMock.employee.lastName)
+          expect(res.body.pin).toEqual(tempMock.employee.pin)
+        })
+    })
+
     test('GET /employees 200 should return 10 employees', () => {
       let tempStore
       let mockPassword = faker.internet.password()

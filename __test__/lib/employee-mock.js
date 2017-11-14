@@ -3,9 +3,6 @@
 const faker = require('faker')
 const storeMock = require('./store-mock.js')
 const Employee = require('../../model/employee.js')
-const findByPin = () => {
-  Math.random().toString().slice(-4)
-}
 
 let create = () => {
   let result = {}
@@ -20,7 +17,7 @@ let create = () => {
         phoneNumber: faker.phone.phoneNumber(),
         hoursPerWeek: Math.floor(Math.random() * 100),
         salaryPerHour: Math.floor(Math.random() * 250),
-        pin: findByPin(),
+        pin: Math.random().toString().slice(-4),
         hired: faker.date.past(),
         terminated: null,
         store: result.tempStore.store._id,
