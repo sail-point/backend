@@ -53,16 +53,13 @@ storeSchema.methods.update = function(data) {
 
 const Store = module.exports = mongoose.model('store', storeSchema)
 
-// Data is going to contain {username, email, and password}
 Store.create = function(data) {
-  // Hash password
   data = {...data}
   let {password} = data
   delete data.password
   return bcrypt.hash(password, 8)
     .then(passwordHash => {
       data.passwordHash = passwordHash
-      // Generate a tokenSeed
       data.tokenSeed = crypto.randomBytes(64).toString('hex')
       return new Store(data).save()
     })
