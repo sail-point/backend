@@ -21,6 +21,8 @@ module.exports = new Router()
     if (!req.body.employee || !req.body.products)
       return next(httpErrors(400, 'employee and products required'))
     Order.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+      .populate('products')
+      .populate('employee')
       .then(order => {
         if (!order)
           throw httpErrors(404, '__REQUEST_ERROR__ order not found')
@@ -30,6 +32,8 @@ module.exports = new Router()
   })
   .get('/orders/:id', bearerAuth, (req, res, next) => {
     Order.findById(req.params.id)
+      .populate('products')
+      .populate('employee')
       .then(order => {
         if (!order)
           throw httpErrors(404, '__REQUEST_ERROR__ order not found')
@@ -53,6 +57,8 @@ module.exports = new Router()
     let ordersCache
 
     Order.find(req.query)
+      .populate('products')
+      .populate('employee')
       .skip(page * 100)
       .limit(100)
       .then(orders => {
