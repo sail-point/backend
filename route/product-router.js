@@ -46,7 +46,7 @@ module.exports = new Router()
 
         let lastPage = Math.floor(count / 100)
         res.links({
-          next: `${apiURL}/products?page=${page + 1}`,
+          next: `${apiURL}/products?page=${page === lastPage ? lastPage : page+1}`,
           prev: `${apiURL}/products?page=${page < 1 ? 0 : page - 1}`,
           last: `${apiURL}/products?page=${lastPage}`,
         })

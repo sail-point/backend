@@ -5,6 +5,8 @@ const httpErrors = require('http-errors')
 const bearerAuth = require('../lib/bearer-auth-middleware.js')
 const Order = require('../model/order.js')
 
+const apiURL = `${process.env.API_URL}`
+
 let fuzzy = (filterTerm) => new RegExp('.*' + filterTerm.toLowerCase().split('').join('.*') + '.*')
 
 module.exports = new Router()
@@ -74,9 +76,9 @@ module.exports = new Router()
         let lastPage = Math.floor(count / 100)
 
         res.links({
-          next: `http://localhost/orders?page=${page + 1}`,
-          prev: `http://localhost/orders?page=${page < 1 ? 0 : page - 1}`,
-          last: `http://localhost/orders?page=${lastPage}`,
+          next: `${apiURL}/orders?page=${page === lastPage ? lastPage : page+1}`,
+          prev: `${apiURL}/orders?page=${page < 1 ? 0 : page - 1}`,
+          last: `${apiURL}/orders?page=${lastPage}`,
         })
         res.json(result)
       })

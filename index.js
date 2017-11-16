@@ -1,5 +1,5 @@
-'use strict';
+'use strict'
 
-require('dotenv').config();
+require('dotenv').config()
 
-require('./lib/server.js').start();
+require('./lib/server.js').start()
