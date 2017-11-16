@@ -4,8 +4,8 @@ const mongoose = require('mongoose')
 
 const productSchema = mongoose.Schema({
   name: { type: String, required: true },
+  price: { type: Number, required: true },
   category: { type: String },
-  price: { type: Number },
   image: { type: String },
   available: { type: Boolean },
   created: { type: Date, default: () => new Date() },
