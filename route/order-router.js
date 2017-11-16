@@ -14,8 +14,13 @@ module.exports = new Router()
     return new Order({
       ...req.body, // products and employee from fronted
     }).save()
-      .then(offer => {
-        res.json(offer)
+      .then(order => {
+        return Order.find(order)
+          .populate('products')
+          .populate('employee')
+      })
+      .then(order => {
+        res.json(order)
       })
       .catch(next)
   })

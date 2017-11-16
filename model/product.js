@@ -9,7 +9,7 @@ const productSchema = mongoose.Schema({
   image: { type: String },
   available: { type: Boolean },
   created: { type: Date, default: () => new Date() },
-  store: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'store' },
+  store: { type: mongoose.Schema.Types.ObjectId, required: true },
 })
 
 module.exports = mongoose.model('product', productSchema)
