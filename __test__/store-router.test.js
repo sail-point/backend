@@ -80,7 +80,7 @@ describe('AUTH router', () => {
       return storeMock.create()
         .then(mock => {
           return superagent.get(`${apiURL}/admin/login`)
-            .auth(mock.request.storeName, mock.request.password)
+            .auth(mock.request.email, mock.request.password)
         })
         .then(res => {
           expect(res.status).toEqual(200)
@@ -104,7 +104,7 @@ describe('AUTH router', () => {
       return storeMock.create()
         .then(mock => {
           return superagent.get(`${apiURL}/admin/login`)
-            .auth(mock.request.storeName, 'lulwat')
+            .auth(mock.request.email, 'lulwat')
         })
         .then(Promise.reject)
         .catch(res => {

@@ -11,7 +11,6 @@ let fuzzy = (filterTerm) => new RegExp('.*' + filterTerm.toLowerCase().split('')
 
 module.exports = new Router()
   .post('/employees', bearerAuth, (req, res, next) => {
-    console.log('req.body: ', req.body)
     return new Employee({
       ...req.body,
       store: req.store._id,
@@ -60,7 +59,6 @@ module.exports = new Router()
       .catch(next)
   })
   .get('/employees/pin/:pin', bearerAuth, (req, res, next) => {
-    console.log('req.params.pin: ', req.params.pin)
     Employee.findOne({pin: req.params.pin})
       .then(employee => {
         if (!employee)
@@ -72,8 +70,10 @@ module.exports = new Router()
       .catch(next)
   })
   .put('/employees/:id', bearerAuth, (req, res, next) => {
+    console.log('lulwat')
     Employee.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
       .then(employee => {
+        console.log({employee})
         if (!employee)
           throw httpErrors(404, '__REQUEST_ERROR__ employee not found')
         res.json(employee)
