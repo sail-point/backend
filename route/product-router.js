@@ -19,6 +19,7 @@ module.exports = new Router()
   })
 
   .get('/products', bearerAuth, (req, res, next) => {
+    // console.log(bearerAuth)
     let { page = '0' } = req.query
     delete req.query.page
     page = Number(page)
@@ -31,12 +32,12 @@ module.exports = new Router()
     if (req.query.category) req.query.category = ({ $regex: fuzzy(req.query.category), $options: 'i' })
 
     let productsCache
-    Product.find(req.query)
+    Product.find({...req.query, store: req.store._id})
       .skip(page * 100)
       .limit(100)
       .then(products => {
         productsCache = products
-        return Product.find(req.query).count()
+        return Product.find({ ...req.query, store: req.store._id }).count()
       })
       .then(count => {
         let result = {
@@ -55,7 +56,6 @@ module.exports = new Router()
       .catch(next)
   })
 
-
   .put('/products/:id', bearerAuth, (req, res, next) => {
     if (!req.body.name)
       return next(httpErrors(400, 'product name is required'))
@@ -65,7 +65,6 @@ module.exports = new Router()
       })
       .catch(next)
   })
-
 
   .delete('/products/:id', bearerAuth, (req, res, next) => {
     Product.findByIdAndRemove(req.params.id)
