@@ -35,12 +35,12 @@ module.exports = new Router()
     if (req.query.title) req.query.title = ({$regex: fuzzy(req.query.title), $options: 'i'})
 
     let employeesCache
-    Employee.find(req.query)
+    Employee.find({...req.query, store: req.store._id})
       .skip(page * 10)
       .limit(10)
       .then(employees => {
         employeesCache = employees
-        return Employee.find(req.query).count()
+        return Employee.find({...req.query, store: req.store._id}).count()
       })
       .then(count => {
         let result = {
