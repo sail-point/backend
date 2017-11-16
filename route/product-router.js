@@ -37,7 +37,7 @@ module.exports = new Router()
       .limit(100)
       .then(products => {
         productsCache = products
-        return Product.find(req.query).count()
+        return Product.find({ ...req.query, store: req.store._id }).count()
       })
       .then(count => {
         let result = {
