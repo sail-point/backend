@@ -11,7 +11,7 @@ const employeeSchema = mongoose.Schema({
   hoursPerWeek: { type: Number, required: true },
   salaryPerHour: { type: Number, required: true },
   pin: {type: String, default: Math.random().toString().slice(-4), required: true},
-  hired: {type: Date, default: null },
+  hired: {type: Date },
   terminated: {type: Date, default: null},
   store: { type: mongoose.Schema.Types.ObjectId, required: true},
 })
