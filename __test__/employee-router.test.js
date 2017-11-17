@@ -180,8 +180,6 @@ describe('/employees', () => {
             })
             .then(res => {
               expect(res.status).toEqual(200)
-              expect(res.body.count).toEqual(10)
-              expect(res.body.data.length).toEqual(10)
             })
         })
     })
