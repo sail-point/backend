@@ -35,12 +35,12 @@ module.exports = new Router()
     if (req.query.title) req.query.title = ({$regex: fuzzy(req.query.title), $options: 'i'})
 
     let employeesCache
-    Employee.find({...req.query, store: req.store._id})
+    Employee.find(req.query)
       .skip(page * 10)
       .limit(10)
       .then(employees => {
         employeesCache = employees
-        return Employee.find({...req.query, store: req.store._id}).count()
+        return Employee.find(req.query).count()
       })
       .then(count => {
         let result = {
@@ -70,10 +70,8 @@ module.exports = new Router()
       .catch(next)
   })
   .put('/employees/:id', bearerAuth, (req, res, next) => {
-    console.log('lulwat')
     Employee.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
       .then(employee => {
-        console.log({employee})
         if (!employee)
           throw httpErrors(404, '__REQUEST_ERROR__ employee not found')
         res.json(employee)
